@@ -1,0 +1,16 @@
+diff --git a/node_modules/buffer-equal-constant-time/index.js b/node_modules/buffer-equal-constant-time/index.js
+index 5462c1f..2d3145d 100644
+--- a/node_modules/buffer-equal-constant-time/index.js
++++ b/node_modules/buffer-equal-constant-time/index.js
+@@ -1,7 +1,10 @@
+ /*jshint node:true */
+ 'use strict';
+ var Buffer = require('buffer').Buffer; // browserify
+-var SlowBuffer = require('buffer').SlowBuffer;
++// SlowBuffer was removed in newer Node.js (>=24). Fall back to an empty
++// object so accessing `.prototype` below doesn't throw. The install/restore
++// helpers that rely on it are not used by jwa/jws/jsonwebtoken.
++var SlowBuffer = require('buffer').SlowBuffer || { prototype: {} };
+ 
+ module.exports = bufferEq;
+ 
