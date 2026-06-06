@@ -12,13 +12,31 @@ import { fileURLToPath } from "url"
 
 dotenv.config()
 
-mongoose.connect(process.env.MONGO_URI)
+const mongoUri = process.env.MONGO_URI
+
+if (!mongoUri) {
+  console.error("MONGO_URI is not defined. Please set it in backend/.env")
+  process.exit(1)
+}
+
+mongoose
+  .connect(mongoUri, {
+    serverSelectionTimeoutMS: 30000,
+    retryWrites: true,
+    family: 4,
+    tls: true,
+    tlsAllowInvalidCertificates: true,
+  })
   .then(() => {
     console.log("Database is connected")
   })
   .catch((err) => {
-    console.log(err)
+    console.error("MongoDB connection failed:", err)
   })
+
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB runtime error:", err)
+})
 
 const app = express()
 
