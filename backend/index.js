@@ -22,16 +22,14 @@ if (!mongoUri) {
 mongoose
   .connect(mongoUri, {
     serverSelectionTimeoutMS: 30000,
-    retryWrites: true,
-    family: 4,
-    tls: true,
-    tlsAllowInvalidCertificates: true,
+    socketTimeoutMS: 45000,
   })
   .then(() => {
-    console.log("Database is connected")
+    console.log("Database is connected successfully!")
   })
   .catch((err) => {
-    console.error("MongoDB connection failed:", err)
+    console.error("MongoDB connection failed:", err.message)
+    process.exit(1)
   })
 
 mongoose.connection.on("error", (err) => {
